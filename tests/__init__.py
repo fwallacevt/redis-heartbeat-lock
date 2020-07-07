@@ -1,1 +1,1 @@
-"""Unit test package for simple_redis_lock."""
+"""Unit test package for redis_heartbeat_lock."""

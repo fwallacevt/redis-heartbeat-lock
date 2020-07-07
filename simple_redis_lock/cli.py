@@ -1,19 +1,19 @@
-"""Console script for simple_redis_lock."""
+"""Console script for redis_heartbeat_lock."""
 import argparse
 import sys
 
 
-
-
 def main():
-    """Console script for simple_redis_lock."""
+    """Console script for redis_heartbeat_lock."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('_', nargs='*')
+    parser.add_argument("_", nargs="*")
     args = parser.parse_args()
 
     print("Arguments: " + str(args._))
-    print("Replace this message by putting your code into "
-          "simple_redis_lock.cli.main")
+    print(
+        "Replace this message by putting your code into "
+        "redis_heartbeat_lock.cli.main"
+    )
     return 0
 
 

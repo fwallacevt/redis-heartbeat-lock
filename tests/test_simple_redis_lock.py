@@ -1,11 +1,8 @@
 #!/usr/bin/env python
-"""Tests for `simple_redis_lock` package."""
+"""Tests for `redis_heartbeat_lock` package."""
 # pylint: disable=redefined-outer-name
 
 import pytest
-
-
-
 
 
 @pytest.fixture

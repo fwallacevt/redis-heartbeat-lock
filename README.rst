@@ -6,7 +6,7 @@ Basic Redis locking mechanism, implemented as an asynchronous context manager. A
 
 
 * Free software: MIT
-* Documentation: https://simple-redis-lock.readthedocs.io.
+* Documentation: https://redis-heartbeat-lock.readthedocs.io.
 
 
 Features

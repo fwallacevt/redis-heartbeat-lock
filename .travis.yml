@@ -14,7 +14,7 @@ deploy:
   distributions: sdist bdist_wheel
   on:
     tags: true
-    repo: fwallacevt/simple-redis-lock
+    repo: fwallacevt/redis-heartbeat-lock
     python: 3.8
 env:
   global:

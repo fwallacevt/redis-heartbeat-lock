@@ -1,8 +1,8 @@
 [tool]
 [tool.poetry]
-name = "simple_redis_lock"
+name = "redis_heartbeat_lock"
 version = "0.1.6"
-homepage = "https://github.com/fwallacevt/simple_redis_lock"
+homepage = "https://github.com/fwallacevt/redis-heartbeat-lock"
 description = "Top-level package for Simple Python Redis locking."
 authors = ["Forrest Wallace <forrest.wallace.vt@gmail.com>"]
 readme = "README.rst"
@@ -16,7 +16,7 @@ classifiers=[
     'Programming Language :: Python :: 3.8',
 ]
 packages = [
-    { include = "simple_redis_lock" },
+    { include = "redis_heartbeat_lock" },
     { include = "tests", format = "sdist" },
 ]
 
