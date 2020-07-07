@@ -1,4 +1,4 @@
-* Simple Python Redis locking version:
+* Redis heartbeat lock version:
 * Python version:
 * Operating System:
 

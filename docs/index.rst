@@ -1,4 +1,4 @@
-Welcome to Simple Python Redis locking's documentation!
+Welcome to Redis heartbeat lock's documentation!
 ======================================
 
 .. toctree::

@@ -1,5 +1,5 @@
 ==================
-Simple Python Redis locking
+Redis heartbeat lock
 ==================
 
 Basic Redis locking mechanism, implemented as an asynchronous context manager. Allows the caller to hold a lock, with a specified heartbeat, while doing a chunk of work.

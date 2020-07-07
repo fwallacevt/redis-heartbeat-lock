@@ -1,4 +1,4 @@
-"""Top-level package for Simple Python Redis locking."""
+"""Top-level package for Redis heartbeat lock."""
 
 __author__ = """Forrest Wallace"""
 __email__ = "forrest.wallace.vt@gmail.com"

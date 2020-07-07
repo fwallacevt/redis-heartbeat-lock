@@ -8,13 +8,13 @@ Installation
 Stable release
 --------------
 
-To install Simple Python Redis locking, run this command in your terminal:
+To install Redis heartbeat lock, run this command in your terminal:
 
 .. code-block:: console
 
     $ pip install redis-heartbeat-lock
 
-This is the preferred method to install Simple Python Redis locking, as it will always install the most recent stable release.
+This is the preferred method to install Redis heartbeat lock, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -26,7 +26,7 @@ you through the process.
 From source
 -----------
 
-The source for Simple Python Redis locking can be downloaded from the `Github repo`_.
+The source for Redis heartbeat lock can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 

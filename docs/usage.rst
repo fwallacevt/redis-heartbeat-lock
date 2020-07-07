@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use Simple Python Redis locking in a project::
+To use Redis heartbeat lock in a project::
 
     import redis-heartbeat-lock

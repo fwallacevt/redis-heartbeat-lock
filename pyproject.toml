@@ -3,7 +3,7 @@
 name = "redis-heartbeat-lock"
 version = "0.1.7"
 homepage = "https://github.com/fwallacevt/redis-heartbeat-lock"
-description = "Top-level package for Simple Python Redis locking."
+description = "Top-level package for Redis heartbeat lock."
 authors = ["Forrest Wallace <forrest.wallace.vt@gmail.com>"]
 readme = "README.rst"
 license =  "MIT"

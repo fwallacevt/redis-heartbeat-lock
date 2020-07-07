@@ -51,7 +51,7 @@ source_suffix = [".rst", ".md"]
 master_doc = "index"
 
 # General information about the project.
-project = "Simple Python Redis locking"
+project = "Redis heartbeat lock"
 copyright = "2020, Forrest Wallace"
 author = "Forrest Wallace"
 
@@ -132,7 +132,7 @@ latex_documents = [
     (
         master_doc,
         "redis-heartbeat-lock.tex",
-        "Simple Python Redis locking Documentation",
+        "Redis heartbeat lock Documentation",
         "Forrest Wallace",
         "manual",
     ),
@@ -147,7 +147,7 @@ man_pages = [
     (
         master_doc,
         "redis-heartbeat-lock",
-        "Simple Python Redis locking Documentation",
+        "Redis heartbeat lock Documentation",
         [author],
         1,
     )
@@ -163,7 +163,7 @@ texinfo_documents = [
     (
         master_doc,
         "redis-heartbeat-lock",
-        "Simple Python Redis locking Documentation",
+        "Redis heartbeat lock Documentation",
         author,
         "redis-heartbeat-lock",
         "One line description of project.",
