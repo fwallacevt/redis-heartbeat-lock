@@ -15,7 +15,9 @@ deploy:
   on:
     tags: true
     repo: fwallacevt/redis-heartbeat-lock
-    python: 3.8
+    python:
+      - 3.7
+      - 3.8
 env:
   global:
   - secure: dCRKpTfiGZP/44fto6HbC7NxXmlmUBWTNKoW76D94Dpwz/gUaZYi2EfQUSCjzGb0uoywwKJUiOU/lRAd2DYETzAnH5m/fhrCP7XB8x3/Degf9ty6tIr3MjeAVfXJbpvWxWESUlFNL9AhAWk2PGR1OYxf2KEZDRWRbRZt62ECtN1QKbO7LUEckyroP37VDAhBqsBWa/YMGN6RkiXBxDOzNlbc7iykM7KHpJj0+K4jtibyL6lnRMcsUuJER8IoIPpPjXPUOXksfgo19jE2JrAB24PVqOBhO9ou0ye5K1hgMzYMbb1duYubhiBo7B6iHHehAwZZbyfi3I1Y/zWlBYFlpku2dW8icdaF/DH4Bfv9K5c0D4DacAHjlLXDpel9F8pkPqBRlYB9pL6VrXH6XS4Df6EB+3nD50uoE+RRtrAlaT0/bx4hGg8opRKctnWKYqw4mXxqxKgkbEHID2tJQXVtYEJEj+jtf4SYzVyX5Cyj1na/zVqfKKj2hEKBfdii+nJRYt8XZJ2/OdKjyy/RtJUcCrDfMJDG9QLIlwp8naIcXU6Evp7ipTz3p7yxgSEh5pSl32yNYqjL0URkTuWTAs2YkBrIP4+p2GkoHW5FlI9sTouCUziCMficHu2gQF1mE5ht5bTk2t2XTrhQIOiAVOTtI0y3S0mdY58o6NSofvBLx/c=
