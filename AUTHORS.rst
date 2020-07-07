@@ -1,9 +1,13 @@
-# Credits
+=======
+Credits
+=======
 
-## Development Lead
+Development Lead
+----------------
 
 * Forrest Wallace <forrest.wallace.vt@gmail.com>
 
-## Contributors
+Contributors
+------------
 
 None yet. Why not be the first?
