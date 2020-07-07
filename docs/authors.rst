@@ -1,1 +1,1 @@
-../AUTHORS.md
+.. include:: ../AUTHORS.rst
