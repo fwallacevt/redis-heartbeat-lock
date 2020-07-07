@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Tests for `redis_heartbeat_lock` package."""
+"""Tests for `redis-heartbeat-lock` package."""
 # pylint: disable=redefined-outer-name
 
 import pytest
