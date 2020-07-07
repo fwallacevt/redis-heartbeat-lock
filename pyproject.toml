@@ -16,7 +16,7 @@ classifiers=[
     'Programming Language :: Python :: 3.8',
 ]
 packages = [
-    { include = "redis-heartbeat-lock" },
+    { include = "redis_heartbeat_lock" },
     { include = "tests", format = "sdist" },
 ]
 

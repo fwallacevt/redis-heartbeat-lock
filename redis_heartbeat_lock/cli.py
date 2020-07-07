@@ -12,7 +12,7 @@ def main():
     print("Arguments: " + str(args._))
     print(
         "Replace this message by putting your code into "
-        "redis-heartbeat-lock.cli.main"
+        "redis_heartbeat_lock.cli.main"
     )
     return 0
 
