@@ -64,14 +64,15 @@ class AsyncRedisLock:
 
         def _inner() -> bool:
             _start_time = time.time()
-            set_lock = self.client.set(
+            _set_lock = self.client.set(
                 name=self.key, value=str(value), ex=self.lock_expiry, px=None, nx=nx,
             )
-            while set_lock is not True and (
+            while _set_lock is not True and (
                 (time.time() - _start_time) < self.lock_acquisition_timeout
             ):
                 time.sleep(self.lock_check_rate)
 
+            set_lock = _set_lock is True
             return set_lock
 
         ret = await run_sync_in_thread_pool(_inner)
