@@ -70,6 +70,13 @@ class AsyncRedisLock:
             while _set_lock is not True and (
                 (time.time() - _start_time) < self.lock_acquisition_timeout
             ):
+                _set_lock = self.client.set(
+                    name=self.key,
+                    value=str(value),
+                    ex=self.lock_expiry,
+                    px=None,
+                    nx=nx,
+                )
                 time.sleep(self.lock_check_rate)
 
             set_lock = _set_lock is True
