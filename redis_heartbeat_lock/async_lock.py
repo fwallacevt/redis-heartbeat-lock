@@ -91,8 +91,8 @@ class AsyncLock:
         ret = await run_sync_in_thread_pool(_inner)
         return ret
 
-    async def expire(self) -> None:
-        """Set an expire flag on the given key."""
+    async def set_expiration(self) -> None:
+        """Set the expiration, in seconds, on the given key."""
 
         def _inner():
             self.client.expire(name=self.key, time=self.lock_expiry)

@@ -14,7 +14,7 @@ class ContextManager:
     # The heartbeat task
     future: asyncio.Task
 
-    # Redis client
+    # Redis lock
     redis: AsyncLock
 
     def __init__(self, period: float, redis: AsyncLock):
@@ -24,7 +24,7 @@ class ContextManager:
     async def heartbeat(self) -> None:
         """Refresh the Redis lock and go back to sleep."""
         while True:
-            await self.redis.expire()
+            await self.redis.set_expiration()
             await asyncio.sleep(self.period)
 
     async def __aenter__(self) -> None:
