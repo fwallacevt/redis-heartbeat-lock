@@ -18,6 +18,6 @@ To use Redis heartbeat lock in a project::
     )
 
     # Use the context manager to hold a lock while doing work, refreshing every `period` seconds
-    async with redis_heartbeat_lock.ContextManager(period=1.0, redis=redis) as context:
+    async with redis_heartbeat_lock.ContextManager(period=1.0, redis=redis) as _:
         # Do some stuff
         pass
