@@ -5,7 +5,7 @@ import asyncio
 from .async_redis_lock import AsyncRedisLock
 
 
-class RedisHeartbeatLock:
+class RedisLockContextManager:
     """Manages starting and stopping heartbeat polling on a particular endpoint"""
 
     # Period to poll the heartbeat on

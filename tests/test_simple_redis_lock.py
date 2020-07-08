@@ -17,7 +17,7 @@ async def test_raises_if_exception_occurs():
         lock_expiry=2,
     )
 
-    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=1.0, redis=redis)
+    heartbeat = redis_heartbeat_lock.RedisLockContextManager(period=1.0, redis=redis)
 
     with pytest.raises(
         Exception, match=r"Failed!",
@@ -38,7 +38,7 @@ async def test_cleans_up_if_nothing_happens():
         lock_expiry=2,
     )
 
-    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=1.0, redis=redis)
+    heartbeat = redis_heartbeat_lock.RedisLockContextManager(period=1.0, redis=redis)
 
     async with heartbeat as heartbeat:
         pass
@@ -56,7 +56,7 @@ async def test_can_run_things_in_the_foreground():
         lock_expiry=2,
     )
 
-    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=1.0, redis=redis)
+    heartbeat = redis_heartbeat_lock.RedisLockContextManager(period=1.0, redis=redis)
 
     async with heartbeat as heartbeat:
         await asyncio.sleep(5)
@@ -73,7 +73,7 @@ async def test_gets_lock():
         key="test_gets_lock", lock_acquisition_timeout=2.0, lock_expiry=4,
     )
 
-    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=1.0, redis=redis)
+    heartbeat = redis_heartbeat_lock.RedisLockContextManager(period=1.0, redis=redis)
 
     async with heartbeat as heartbeat:
         lock = await redis.set_lock(True, True)
@@ -92,7 +92,7 @@ async def test_errors_if_lock_is_acquired():
     lock = await redis.set_lock(True, True)
     assert lock == True
 
-    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=1.0, redis=redis)
+    heartbeat = redis_heartbeat_lock.RedisLockContextManager(period=1.0, redis=redis)
 
     with pytest.raises(
         Exception, match=r"Failed to get lock",
@@ -109,7 +109,7 @@ async def test_holds_lock():
         key="test_holds_lock", lock_acquisition_timeout=2.0, lock_expiry=4,
     )
 
-    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=2.0, redis=redis)
+    heartbeat = redis_heartbeat_lock.RedisLockContextManager(period=2.0, redis=redis)
 
     async with heartbeat as heartbeat:
         lock = await redis.set_lock(True, True)
