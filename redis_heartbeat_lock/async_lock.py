@@ -6,6 +6,11 @@ import time
 from typing import Any, Optional
 
 from .executor import run_sync_in_thread_pool
+from .shared import (
+    DEFAULT_LOCK_ACQUISITION_TIMEOUT,
+    DEFAULT_LOCK_CHECK_RATE,
+    DEFAULT_LOCK_EXPIRY,
+)
 
 
 class AsyncLock:
@@ -50,9 +55,9 @@ class AsyncLock:
         host: str = "127.0.0.1",
         port: int = 6379,
         db: int = 0,
-        lock_acquisition_timeout: float = 8.0,
-        lock_check_rate: float = 0.2,
-        lock_expiry: int = 8,
+        lock_acquisition_timeout: float = DEFAULT_LOCK_ACQUISITION_TIMEOUT,
+        lock_check_rate: float = DEFAULT_LOCK_CHECK_RATE,
+        lock_expiry: int = DEFAULT_LOCK_EXPIRY,
     ) -> "AsyncLock":
         """Asynchronously create a Redis client and initialize the wrapper class."""
 

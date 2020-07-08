@@ -3,6 +3,7 @@
 import asyncio
 
 from .async_lock import AsyncLock
+from .shared import DEFAULT_HEARTBEAT_PERIOD
 
 
 class ContextManager:
@@ -17,7 +18,7 @@ class ContextManager:
     # Redis lock
     __redis: AsyncLock
 
-    def __init__(self, period: float, redis: AsyncLock):
+    def __init__(self, redis: AsyncLock, period: float = DEFAULT_HEARTBEAT_PERIOD):
         self.__period = period
         self.__redis = redis
 
