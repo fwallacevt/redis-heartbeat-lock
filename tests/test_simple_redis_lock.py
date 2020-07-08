@@ -5,7 +5,6 @@
 import asyncio
 import pytest
 from redis_heartbeat_lock import async_lock, context_manager
-from redis_heartbeat_lock.context_manager import ContextManager
 
 
 @pytest.mark.asyncio
