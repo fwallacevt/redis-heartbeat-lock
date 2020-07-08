@@ -8,7 +8,7 @@ from typing import Any, Optional
 from .executor import run_sync_in_thread_pool
 
 
-class AsyncRedisLock:
+class AsyncLock:
     """An async wrapper around the officially supported Redis client for Python, used to implement basic locking."""
 
     # The key to lock on
@@ -53,7 +53,7 @@ class AsyncRedisLock:
         lock_acquisition_timeout: float = 8.0,
         lock_check_rate: float = 0.2,
         lock_expiry: int = 8,
-    ) -> "AsyncRedisLock":
+    ) -> "AsyncLock":
         """Asynchronously create a Redis client and initialize the wrapper class."""
 
         def _inner() -> redis.Redis:

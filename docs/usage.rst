@@ -7,7 +7,7 @@ To use Redis heartbeat lock in a project::
     import redis_heartbeat_lock
 
     # Initialize Redis client.
-    redis = await redis_heartbeat_lock.AsyncRedisLock.create(
+    redis = await redis_heartbeat_lock.AsyncLock.create(
         key="my_key",
         host="my_host", # default 127.0.0.1
         port=1234, # default 6379
@@ -18,6 +18,6 @@ To use Redis heartbeat lock in a project::
     )
 
     # Use the context manager to hold a lock while doing work, refreshing every `period` seconds
-    async with redis_heartbeat_lock.RedisLockContextManager(period=1.0, redis=redis) as context:
+    async with redis_heartbeat_lock.ContextManager(period=1.0, redis=redis) as context:
         # Do some stuff
         pass

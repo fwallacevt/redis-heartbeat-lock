@@ -2,10 +2,10 @@
 
 import asyncio
 
-from .async_redis_lock import AsyncRedisLock
+from .async_lock import AsyncLock
 
 
-class RedisLockContextManager:
+class ContextManager:
     """Manages starting and stopping heartbeat polling on a particular endpoint"""
 
     # Period to poll the heartbeat on
@@ -15,9 +15,9 @@ class RedisLockContextManager:
     future: asyncio.Task
 
     # Redis client
-    redis: AsyncRedisLock
+    redis: AsyncLock
 
-    def __init__(self, period: float, redis: AsyncRedisLock):
+    def __init__(self, period: float, redis: AsyncLock):
         self.period = period
         self.redis = redis
 
