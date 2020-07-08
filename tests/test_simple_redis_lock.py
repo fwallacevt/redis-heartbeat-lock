@@ -85,7 +85,9 @@ async def test_errors_if_lock_is_acquired():
     """Tests that the heartbeat errors if someone else has the lock."""
     # First, build our redis client and heartbeat manager...
     redis = await redis_heartbeat_lock.AsyncRedisLock.create(
-        key="test_gets_lock", lock_acquisition_timeout=2.0, lock_expiry=8,
+        key="test_errors_if_lock_is_acquired",
+        lock_acquisition_timeout=2.0,
+        lock_expiry=8,
     )
     lock = await redis.set_lock(True, True)
     assert lock == True
