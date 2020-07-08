@@ -59,20 +59,23 @@ class AsyncRedisLock:
         client = await run_sync_in_thread_pool(_inner)
         return cls(key, client, lock_acquisition_timeout, lock_check_rate, lock_expiry)
 
-    async def set_lock(self, value: Any, nx: bool = False) -> None:
+    async def set_lock(self, value: Any, nx: bool = False) -> bool:
         """Try to set the given key until we timeout."""
 
-        def _inner():
+        def _inner() -> bool:
             _start_time = time.time()
-            while self.client.set(
+            set_lock = self.client.set(
                 name=self.key, value=str(value), ex=self.lock_expiry, px=None, nx=nx,
-            ) is not True and (
+            )
+            while set_lock is not True and (
                 (time.time() - _start_time) < self.lock_acquisition_timeout
             ):
                 time.sleep(self.lock_check_rate)
 
-        # Timeout after our specified number of seconds
-        await run_sync_in_thread_pool(_inner)
+            return set_lock
+
+        ret = await run_sync_in_thread_pool(_inner)
+        return ret
 
     async def expire(self) -> None:
         """Set an expire flag on the given key."""
