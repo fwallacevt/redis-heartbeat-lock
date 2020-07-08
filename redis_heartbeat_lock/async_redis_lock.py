@@ -109,3 +109,12 @@ class AsyncRedisLock:
             self.client.delete(self.key)
 
         await run_sync_in_thread_pool(_inner)
+
+    async def exists(self) -> None:
+        """Check if the key exists. Mostly for testing."""
+
+        def _inner() -> int:
+            return self.client.exists(self.key)
+
+        ret = await run_sync_in_thread_pool(_inner)
+        return ret

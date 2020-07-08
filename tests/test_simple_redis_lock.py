@@ -26,6 +26,7 @@ async def test_raises_if_exception_occurs():
             raise Exception(f"Failed!")
 
     assert heartbeat is None
+    assert await redis.exists() == 0
 
 
 @pytest.mark.asyncio
@@ -44,6 +45,7 @@ async def test_cleans_up_if_nothing_happens():
         pass
 
     assert heartbeat is None
+    assert await redis.exists() == 0
 
 
 @pytest.mark.asyncio
@@ -63,6 +65,7 @@ async def test_can_run_things_in_the_foreground():
         print("Did some stuff!")
 
     assert heartbeat is None
+    assert await redis.exists() == 0
 
 
 @pytest.mark.asyncio
@@ -78,6 +81,8 @@ async def test_gets_lock():
     async with heartbeat as heartbeat:
         lock = await redis.set_lock(True, True)
         assert lock == False
+
+    assert await redis.exists() == 0
 
 
 @pytest.mark.asyncio
@@ -99,6 +104,8 @@ async def test_errors_if_lock_is_acquired():
     ):
         async with heartbeat as heartbeat:
             pass
+
+    assert await redis.exists() == 1
 
 
 @pytest.mark.asyncio
@@ -124,3 +131,5 @@ async def test_holds_lock():
         await asyncio.sleep(5)
         lock = await redis.set_lock(True, True)
         assert lock == False
+
+    assert await redis.exists() == 0
