@@ -14,6 +14,7 @@ Sponsor
 .. image:: https://s3.amazonaws.com/faraday-assets/files/img/logo.svg
     :target: https://www.faraday.io
     :alt: Faraday logo
+    
 We use `redis-heartbeat-lock`_ for `B2C customer lifecycle optimization at Faraday`_.
 
 .. _`redis-heartbeat-lock`: https://github.com/fwallacevt/redis-heartbeat-lock
