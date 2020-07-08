@@ -2,6 +2,7 @@
 """Tests for `redis-heartbeat-lock` package."""
 # pylint: disable=redefined-outer-name
 
+import asyncio
 import pytest
 import redis_heartbeat_lock
 
@@ -24,15 +25,100 @@ async def test_raises_if_exception_occurs():
         async with heartbeat as heartbeat:
             raise Exception(f"Failed!")
 
+    assert heartbeat is None
 
-# Want to test...
-# (1) That if an exception occurs, we catch it
-# (2) If we do no work, we still shut down correctly (e.g. call exit fxn)
-# (3) That I can spawn a heartbeat and have it run in the background while running other things in the foreground
 
-# Test that if an exception occurs during heartbeat, it shuts down correctly
-# Test that if we do nothing during heartbeat, it shuts down correctly
-# Test that we can run things in the foreground during heartbeat
-# Test that heartbeat grabs the lock as expected
-# Test that heartbeat errors if the lock is already acquired by someone else
-# Test that it refreshes the lock and holds it longer than initial timeout
+@pytest.mark.asyncio
+async def test_cleans_up_if_nothing_happens():
+    """Tests that if we do nothing, the heartbeat is cleaned up."""
+    # First, build our redis client and heartbeat manager...
+    redis = await redis_heartbeat_lock.AsyncRedisLock.create(
+        key="test_cleans_up_if_nothing_happens",
+        lock_acquisition_timeout=2.0,
+        lock_expiry=2,
+    )
+
+    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=1.0, redis=redis)
+
+    async with heartbeat as heartbeat:
+        pass
+
+    assert heartbeat is None
+
+
+@pytest.mark.asyncio
+async def test_can_run_things_in_the_foreground():
+    """Tests that we can run tasks while running the heartbeat."""
+    # First, build our redis client and heartbeat manager...
+    redis = await redis_heartbeat_lock.AsyncRedisLock.create(
+        key="test_can_run_things_in_the_foreground",
+        lock_acquisition_timeout=2.0,
+        lock_expiry=2,
+    )
+
+    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=1.0, redis=redis)
+
+    async with heartbeat as heartbeat:
+        await asyncio.sleep(5)
+        print("Did some stuff!")
+
+    assert heartbeat is None
+
+
+@pytest.mark.asyncio
+async def test_gets_lock():
+    """Tests that the heartbeat actually grabs the lock correctly."""
+    # First, build our redis client and heartbeat manager...
+    redis = await redis_heartbeat_lock.AsyncRedisLock.create(
+        key="test_gets_lock", lock_acquisition_timeout=2.0, lock_expiry=4,
+    )
+
+    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=1.0, redis=redis)
+
+    async with heartbeat as heartbeat:
+        lock = await redis.set_lock(True, True)
+        assert lock == False
+
+
+@pytest.mark.asyncio
+async def test_errors_if_lock_is_acquired():
+    """Tests that the heartbeat errors if someone else has the lock."""
+    # First, build our redis client and heartbeat manager...
+    redis = await redis_heartbeat_lock.AsyncRedisLock.create(
+        key="test_gets_lock", lock_acquisition_timeout=2.0, lock_expiry=8,
+    )
+    lock = await redis.set_lock(True, True)
+    assert lock == True
+
+    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=1.0, redis=redis)
+
+    with pytest.raises(
+        Exception, match=r"Failed to get lock",
+    ):
+        async with heartbeat as heartbeat:
+            pass
+
+
+@pytest.mark.asyncio
+async def test_holds_lock():
+    """Tests that the heartbeat holds the lock for longer than initial expiry."""
+    # First, build our redis client and heartbeat manager...
+    redis = await redis_heartbeat_lock.AsyncRedisLock.create(
+        key="test_holds_lock", lock_acquisition_timeout=2.0, lock_expiry=4,
+    )
+
+    heartbeat = redis_heartbeat_lock.RedisHeartbeatLock(period=2.0, redis=redis)
+
+    async with heartbeat as heartbeat:
+        lock = await redis.set_lock(True, True)
+        assert lock == False
+
+        # Should still have the lock after another five seconds
+        await asyncio.sleep(5)
+        lock = await redis.set_lock(True, True)
+        assert lock == False
+
+        # Should still have the lock after another five seconds
+        await asyncio.sleep(5)
+        lock = await redis.set_lock(True, True)
+        assert lock == False
