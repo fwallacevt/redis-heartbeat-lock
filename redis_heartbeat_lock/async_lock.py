@@ -12,22 +12,22 @@ class AsyncLock:
     """An async wrapper around the officially supported Redis client for Python, used to implement basic locking."""
 
     # The key to lock on
-    key: str
+    __key: str
 
     # The Redis client
-    client: redis.Redis
+    __client: redis.Redis
 
     # Timeout when acquiring the lock
-    lock_acquisition_timeout: float
+    __lock_acquisition_timeout: float
 
     # Rate at which to check lock when acquiring it
-    lock_check_rate: float
+    __lock_check_rate: float
 
     # Expiration of the lock, in seconds
-    lock_expiry: int
+    __lock_expiry: int
 
     # When we last obtained the lock
-    lock_obtained_at: float
+    __lock_obtained_at: float
 
     def __init__(
         self,
@@ -37,11 +37,11 @@ class AsyncLock:
         lock_check_rate: float,
         lock_expiry: int,
     ):
-        self.key = key
-        self.client = client
-        self.lock_acquisition_timeout = lock_acquisition_timeout
-        self.lock_check_rate = lock_check_rate
-        self.lock_expiry = lock_expiry
+        self.__key = key
+        self.__client = client
+        self.__lock_acquisition_timeout = lock_acquisition_timeout
+        self.__lock_check_rate = lock_check_rate
+        self.__lock_expiry = lock_expiry
 
     @classmethod
     async def create(
@@ -67,24 +67,28 @@ class AsyncLock:
 
         def _inner() -> bool:
             _start_time = time.time()
-            _set_lock = self.client.set(
-                name=self.key, value=str(value), ex=self.lock_expiry, px=None, nx=nx,
+            _set_lock = self.__client.set(
+                name=self.__key,
+                value=str(value),
+                ex=self.__lock_expiry,
+                px=None,
+                nx=nx,
             )
             while _set_lock is not True and (
-                (time.time() - _start_time) < self.lock_acquisition_timeout
+                (time.time() - _start_time) < self.__lock_acquisition_timeout
             ):
-                _set_lock = self.client.set(
-                    name=self.key,
+                _set_lock = self.__client.set(
+                    name=self.__key,
                     value=str(value),
-                    ex=self.lock_expiry,
+                    ex=self.__lock_expiry,
                     px=None,
                     nx=nx,
                 )
-                time.sleep(self.lock_check_rate)
+                time.sleep(self.__lock_check_rate)
 
             set_lock = _set_lock is True
             if set_lock is True:
-                self.lock_obtained_at = time.time()
+                self.__lock_obtained_at = time.time()
 
             return set_lock
 
@@ -95,18 +99,18 @@ class AsyncLock:
         """Set the expiration, in seconds, on the given key."""
 
         def _inner():
-            self.client.expire(name=self.key, time=self.lock_expiry)
-            self.lock_obtained_at = time.time()
+            self.__client.expire(name=self.__key, time=self.__lock_expiry)
+            self.__lock_obtained_at = time.time()
 
         await run_sync_in_thread_pool(_inner)
 
     async def release(self) -> None:
         """Release the lock, if it hasn't expired."""
-        if time.time() - self.lock_obtained_at > self.lock_expiry:
-            raise Exception(f"{self.key} lost lock before releasing.")
+        if time.time() - self.__lock_obtained_at > self.__lock_expiry:
+            raise Exception(f"{self.__key} lost lock before releasing.")
 
         def _inner():
-            self.client.delete(self.key)
+            self.__client.delete(self.__key)
 
         await run_sync_in_thread_pool(_inner)
 
@@ -114,7 +118,7 @@ class AsyncLock:
         """Check if the key exists. Mostly for testing."""
 
         def _inner() -> int:
-            return self.client.exists(self.key)
+            return self.__client.exists(self.__key)
 
         ret = await run_sync_in_thread_pool(_inner)
         return ret

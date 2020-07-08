@@ -9,31 +9,31 @@ class ContextManager:
     """Manages starting and stopping heartbeat polling on a particular endpoint"""
 
     # Period to poll the heartbeat on
-    period: float
+    __period: float
 
     # The heartbeat task
-    future: asyncio.Task
+    __future: asyncio.Task
 
     # Redis lock
-    redis: AsyncLock
+    __redis: AsyncLock
 
     def __init__(self, period: float, redis: AsyncLock):
-        self.period = period
-        self.redis = redis
+        self.__period = period
+        self.__redis = redis
 
-    async def heartbeat(self) -> None:
+    async def __heartbeat(self) -> None:
         """Refresh the Redis lock and go back to sleep."""
         while True:
-            await self.redis.set_expiration()
-            await asyncio.sleep(self.period)
+            await self.__redis.set_expiration()
+            await asyncio.sleep(self.__period)
 
     async def __aenter__(self) -> None:
         """Start the heartbeat. First, we set the Redis lock, then start the background task."""
-        lock = await self.redis.set_lock(value=True, nx=True)
+        lock = await self.__redis.set_lock(value=True, nx=True)
         if lock is not True:
             raise Exception(f"Failed to get lock.")
 
-        self.future = asyncio.create_task(self.heartbeat())
+        self.future = asyncio.create_task(self.__heartbeat())
 
     async def __aexit__(self, exc_type, exc, tb) -> None:
         """Stop the heartbeat task. We have to cancel the future, since it's on an infinite loop,
@@ -47,4 +47,4 @@ class ContextManager:
 
         # We don't have to worry about closing Redis - the Redis library manages that for us. However,
         # we do need to release the lock.
-        await self.redis.release()
+        await self.__redis.release()
