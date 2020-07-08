@@ -29,7 +29,10 @@ class RedisHeartbeatLock:
 
     async def __aenter__(self) -> None:
         """Start the heartbeat. First, we set the Redis lock, then start the background task."""
-        await self.redis.set_lock(value=True, nx=True)
+        lock = await self.redis.set_lock(value=True, nx=True)
+        if lock is not True:
+            raise Exception(f"Failed to get lock.")
+
         self.future = asyncio.create_task(self.heartbeat())
 
     async def __aexit__(self, exc_type, exc, tb) -> None:
