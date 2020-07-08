@@ -4,13 +4,15 @@ import asyncio
 import redis
 import time
 from typing import Any, Optional
-from uuid import UUID
 
 from .executor import run_sync_in_thread_pool
 
 
 class AsyncRedisLock:
     """An async wrapper around the officially supported Redis client for Python, used to implement basic locking."""
+
+    # The key to lock on
+    key: str
 
     # The Redis client
     client: redis.Redis
@@ -24,12 +26,14 @@ class AsyncRedisLock:
     # Expiration of the lock, in seconds
     lock_expiry: int
 
-    def __init__(self, client: redis.Redis):
+    def __init__(self, key: str, client: redis.Redis):
+        self.key = key
         self.client = client
 
     @classmethod
     async def create(
         cls,
+        key: str,
         host: str,
         port: int = 6379,
         db: int = 0,
@@ -43,14 +47,14 @@ class AsyncRedisLock:
             return redis.Redis(host, port, db)
 
         client = await run_sync_in_thread_pool(_inner)
-        return cls(client)
+        return cls(key, client)
 
-    async def set_lock(self, key: str, value: Any, nx: bool = False) -> None:
+    async def set_lock(self, value: Any, nx: bool = False) -> None:
         """Try to set the given key until we timeout."""
 
         def _inner():
             while (
-                self.client.set(name=key, value=value, ex=self.lock_expiry, nx=nx)
+                self.client.set(name=self.key, value=value, ex=self.lock_expiry, nx=nx)
                 is not True
             ):
                 time.sleep(self.lock_check_rate)
@@ -60,10 +64,10 @@ class AsyncRedisLock:
             run_sync_in_thread_pool(_inner), timeout=self.lock_acquisition_timeout,
         )
 
-    async def expire(self, key: str) -> None:
+    async def expire(self) -> None:
         """Set an expire flag on the given key."""
 
         def _inner():
-            self.client.expire(name=key, time=self.lock_expiry)
+            self.client.expire(name=self.key, time=self.lock_expiry)
 
         await run_sync_in_thread_pool(_inner)
