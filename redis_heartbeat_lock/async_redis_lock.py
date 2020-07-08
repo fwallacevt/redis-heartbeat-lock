@@ -26,6 +26,9 @@ class AsyncRedisLock:
     # Expiration of the lock, in seconds
     lock_expiry: int
 
+    # When we last obtained the lock
+    lock_obtained_at: float
+
     def __init__(
         self,
         key: str,
@@ -80,6 +83,9 @@ class AsyncRedisLock:
                 time.sleep(self.lock_check_rate)
 
             set_lock = _set_lock is True
+            if set_lock is True:
+                self.lock_obtained_at = time.time()
+
             return set_lock
 
         ret = await run_sync_in_thread_pool(_inner)
@@ -90,5 +96,16 @@ class AsyncRedisLock:
 
         def _inner():
             self.client.expire(name=self.key, time=self.lock_expiry)
+            self.lock_obtained_at = time.time()
+
+        await run_sync_in_thread_pool(_inner)
+
+    async def release(self) -> None:
+        """Release the lock, if it hasn't expired."""
+        if time.time() - self.lock_obtained_at > self.lock_expiry:
+            raise Exception(f"{self.key} lost lock before releasing.")
+
+        def _inner():
+            self.client.delete(self.key)
 
         await run_sync_in_thread_pool(_inner)

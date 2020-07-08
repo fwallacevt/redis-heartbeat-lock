@@ -38,9 +38,13 @@ class RedisHeartbeatLock:
     async def __aexit__(self, exc_type, exc, tb) -> None:
         """Stop the heartbeat task. We have to cancel the future, since it's on an infinite loop,
         and then wait for it to finish."""
-        # We don't have to worry about closing Redis - the Redis library manages that for us.
+        # First, stop the heartbeat
         self.future.cancel()
         try:
             await self.future
         except asyncio.CancelledError:
             pass
+
+        # We don't have to worry about closing Redis - the Redis library manages that for us. However,
+        # we do need to release the lock.
+        await self.redis.release()
