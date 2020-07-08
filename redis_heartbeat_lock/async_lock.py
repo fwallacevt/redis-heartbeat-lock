@@ -52,9 +52,7 @@ class AsyncLock:
     async def create(
         cls,
         key: str,
-        host: str = "127.0.0.1",
-        port: int = 6379,
-        db: int = 0,
+        url: str,
         lock_acquisition_timeout: float = DEFAULT_LOCK_ACQUISITION_TIMEOUT,
         lock_check_rate: float = DEFAULT_LOCK_CHECK_RATE,
         lock_expiry: int = DEFAULT_LOCK_EXPIRY,
@@ -62,7 +60,7 @@ class AsyncLock:
         """Asynchronously create a Redis client and initialize the wrapper class."""
 
         def _inner() -> redis.Redis:
-            return redis.Redis(host, port, db)
+            return redis.Redis.from_url(url=url)
 
         client = await run_sync_in_thread_pool(_inner)
         return cls(key, client, lock_acquisition_timeout, lock_check_rate, lock_expiry)

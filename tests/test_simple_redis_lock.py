@@ -13,6 +13,7 @@ async def test_raises_if_exception_occurs():
     # First, build our redis client and heartbeat manager...
     redis = await async_lock.AsyncLock.create(
         key="test_raises_if_exception_occurs",
+        url="redis://127.0.0.1:6379",
         lock_acquisition_timeout=2.0,
         lock_expiry=2,
     )
@@ -36,6 +37,7 @@ async def test_cleans_up_if_nothing_happens():
     # First, build our redis client and heartbeat manager...
     redis = await async_lock.AsyncLock.create(
         key="test_cleans_up_if_nothing_happens",
+        url="redis://127.0.0.1:6379",
         lock_acquisition_timeout=2.0,
         lock_expiry=2,
     )
@@ -56,6 +58,7 @@ async def test_can_run_things_in_the_foreground():
     # First, build our redis client and heartbeat manager...
     redis = await async_lock.AsyncLock.create(
         key="test_can_run_things_in_the_foreground",
+        url="redis://127.0.0.1:6379",
         lock_acquisition_timeout=2.0,
         lock_expiry=2,
     )
@@ -76,7 +79,10 @@ async def test_gets_lock():
     """Tests that the heartbeat actually grabs the lock correctly."""
     # First, build our redis client and heartbeat manager...
     redis = await async_lock.AsyncLock.create(
-        key="test_gets_lock", lock_acquisition_timeout=2.0, lock_expiry=4,
+        key="test_gets_lock",
+        url="redis://127.0.0.1:6379",
+        lock_acquisition_timeout=2.0,
+        lock_expiry=4,
     )
 
     heartbeat = context_manager.ContextManager(period=1.0, redis=redis)
@@ -94,6 +100,7 @@ async def test_errors_if_lock_is_acquired():
     # First, build our redis client and heartbeat manager...
     redis = await async_lock.AsyncLock.create(
         key="test_errors_if_lock_is_acquired",
+        url="redis://127.0.0.1:6379",
         lock_acquisition_timeout=2.0,
         lock_expiry=8,
     )
@@ -116,7 +123,10 @@ async def test_holds_lock():
     """Tests that the heartbeat holds the lock for longer than initial expiry."""
     # First, build our redis client and heartbeat manager...
     redis = await async_lock.AsyncLock.create(
-        key="test_holds_lock", lock_acquisition_timeout=2.0, lock_expiry=4,
+        key="test_holds_lock",
+        url="redis://127.0.0.1:6379",
+        lock_acquisition_timeout=2.0,
+        lock_expiry=4,
     )
 
     heartbeat = context_manager.ContextManager(period=2.0, redis=redis)

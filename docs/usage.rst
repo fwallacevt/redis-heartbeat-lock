@@ -9,9 +9,7 @@ To use Redis heartbeat lock in a project::
     # Initialize Redis client.
     redis = await async_context.AsyncLock.create(
         key="my_key",
-        host="my_host", # default 127.0.0.1
-        port=1234, # default 6379
-        db=0, # default 0
+        url="redis://127.0.0.1:6379",
         lock_acquisition_timeout=2.0, # default 8.0
         lock_check_rate=0.2, # default 0.2
         lock_expiry=8, # default 8
